@@ -1,0 +1,1719 @@
+Atlas atlas-104b3m-shard-0 [primary] test> use PCEA24IT011
+switched to db PCEA24IT011
+Atlas atlas-104b3m-shard-0 [primary] PCEA24IT011> db.createCollection("aggex")
+{ ok: 1 }
+Atlas atlas-104b3m-shard-0 [primary] PCEA24IT011> const categories = [
+|     "Electronics",
+|     "Mobiles",
+|     "Laptops",
+|     "Home Appliances",
+|     "Fashion",
+|     "Books",
+|     "Sports",
+|     "Beauty",
+|     "Grocery",
+|     "Furniture"
+| ];
+|
+| const subCategories = {
+|     "Electronics": ["Headphones", "Smartwatch", "Camera", "Speaker"],
+|     "Mobiles": ["Android", "iPhone", "Feature Phone"],
+|     "Laptops": ["Gaming", "Business", "Student"],
+|     "Home Appliances": ["Refrigerator", "Washing Machine", "Microwave"],
+|     "Fashion": ["Men", "Women", "Kids"],
+|     "Books": ["Programming", "Fiction", "Education"],
+|     "Sports": ["Cricket", "Football", "Fitness"],
+|     "Beauty": ["Skincare", "Haircare", "Makeup"],
+|     "Grocery": ["Snacks", "Beverages", "Staples"],
+|     "Furniture": ["Chair", "Table", "Sofa"]
+| };
+|
+| const brands = [
+|     "Samsung",
+|     "Apple",
+|     "Sony",
+|     "LG",
+|     "HP",
+|     "Dell",
+|     "Lenovo",
+|     "Nike",
+|     "Adidas",
+|     "Boat",
+|     "OnePlus",
+|     "AmazonBasics"
+| ];
+|
+| const cities = [
+|     "Chennai",
+|     "Coimbatore",
+|     "Bangalore",
+|     "Hyderabad",
+|     "Mumbai",
+|     "Delhi",
+|     "Pune",
+|     "Kochi",
+|     "Kolkata",
+|     "Ahmedabad"
+| ];
+|
+| const states = [
+|     "Tamil Nadu",
+|     "Karnataka",
+|     "Telangana",
+|     "Maharashtra",
+|     "Delhi",
+|     "Kerala",
+|     "West Bengal",
+|     "Gujarat"
+| ];
+|
+| const paymentMethods = [
+|     "UPI",
+|     "Credit Card",
+|     "Debit Card",
+|     "Net Banking",
+|     "Cash on Delivery"
+| ];
+|
+| const orderStatuses = [
+|     "Delivered",
+|     "Shipped",
+|     "Processing",
+|     "Cancelled",
+|     "Returned"
+| ];
+|
+| const sellers = [
+|     "RetailHub",
+|     "TechWorld",
+|     "MegaStore",
+|     "DigitalMart",
+|     "SmartShop",
+|     "PrimeRetail"
+| ];
+|
+| const tags = [
+|     "new",
+|     "popular",
+|     "trending",
+|     "premium",
+|     "budget",
+|     "best-seller",
+|     "discount",
+|     "limited-stock"
+| ];
+|
+|
+| // Store documents temporarily
+| let documents = [];
+|
+|
+| // Generate 5000 documents
+| for (let i = 1; i <= 5000; i++) {
+|
+|     const category =
+|         categories[Math.floor(Math.random() * categories.length)];
+|
+|     const subCategory =
+|         subCategories[category][
+|             Math.floor(Math.random() * subCategories[category].length)
+|         ];
+|
+|     const brand =
+|         brands[Math.floor(Math.random() * brands.length)];
+|
+|     const city =
+|         cities[Math.floor(Math.random() * cities.length)];
+|
+|     const state =
+|         states[Math.floor(Math.random() * states.length)];
+|
+|     const paymentMethod =
+|         paymentMethods[
+|             Math.floor(Math.random() * paymentMethods.length)
+|         ];
+|
+|     const orderStatus =
+|         orderStatuses[
+|             Math.floor(Math.random() * orderStatuses.length)
+|         ];
+|
+|     const seller =
+|         sellers[
+|             Math.floor(Math.random() * sellers.length)
+|         ];
+|
+|
+|     const quantity =
+|         Math.floor(Math.random() * 5) + 1;
+|
+|     const price =
+|         Math.floor(Math.random() * 95000) + 500;
+|
+|     const discount =
+|         Math.floor(Math.random() * 51);
+|
+|     const discountedPrice =
+|         Math.round(
+|             price - (price * discount / 100)
+|         );
+|
+|     const rating =
+|         Number(
+|             (Math.random() * 4 + 1).toFixed(1)
+|         );
+|
+|     const stock =
+|         Math.floor(Math.random() * 500);
+|
+|
+|     // Generate 2 random tags
+|     const selectedTags = [];
+|
+|     for (let j = 0; j < 2; j++) {
+|
+|         selectedTags.push(
+|             tags[Math.floor(Math.random() * tags.length)]
+|         );
+|     }
+|
+|
+|     // Random date between 2024 and 2026
+|     const startDate =
+|         new Date("2024-01-01").getTime();
+|
+|     const endDate =
+|         new Date("2026-08-25").getTime();
+|
+|     const randomDate =
+|         new Date(
+|             startDate +
+|             Math.random() * (endDate - startDate)
+|         );
+|
+|
+|     // Create document
+|     const product = {
+|
+|         productId:
+|             "PROD" + String(i).padStart(5, "0"),
+|
+|         productName:
+|             brand + " " + subCategory + " " + i,
+|
+|         category: category,
+|
+|         subCategory: subCategory,
+|
+|         brand: brand,
+|
+|         price: price,
+|
+|         discountPercentage: discount,
+|
+|         discountedPrice: discountedPrice,
+|
+|         quantity: quantity,
+|
+|         revenue:
+|             discountedPrice * quantity,
+|
+|         rating: rating,
+|
+|         reviewCount:
+|             Math.floor(Math.random() * 5000),
+|
+|         stock: stock,
+|
+|         inStock:
+|             stock > 0,
+|
+|
+|         seller: {
+|
+|             name: seller,
+|
+|             sellerRating:
+|                 Number(
+|                     (Math.random() * 4 + 1).toFixed(1)
+|                 )
+|         },
+|
+|
+|         customer: {
+|
+|             customerId:
+|                 "CUS" +
+|                 String(
+|                     Math.floor(Math.random() * 1000) + 1
+|                 ).padStart(4, "0"),
+|
+|             city: city,
+|
+|             state: state,
+|
+|             age:
+|                 Math.floor(Math.random() * 50) + 18
+|         },
+|
+|
+|         payment: {
+|
+|             method: paymentMethod,
+|
+|             transactionId:
+|                 "TXN" +
+|                 Math.random()
+|                     .toString(36)
+|                     .substring(2, 12)
+|         },
+|
+|
+|         orderStatus: orderStatus,
+|
+|         orderDate: randomDate,
+|
+|         tags: selectedTags,
+|
+|
+|         specifications: {
+|
+|             warranty:
+|                 (Math.floor(Math.random() * 3) + 1) +
+|                 " years",
+|
+|             color: [
+|                 "Black",
+|                 "White",
+|                 "Blue",
+|                 "Red",
+|                 "Silver"
+|             ][Math.floor(Math.random() * 5)],
+|
+|             weight:
+|                 Number(
+|                     (Math.random() * 5 + 0.5).toFixed(2)
+|                 )
+|         },
+|
+|
+|         isFeatured:
+|             Math.random() > 0.7,
+|
+|         createdAt: new Date()
+|     };
+|
+|
+|     documents.push(product);
+|
+|
+|     // Insert every 500 documents
+|     if (documents.length === 500) {
+|
+|         db.aggex.insertMany(documents);
+|
+|         documents = [];
+|     }
+| }
+|
+| // Insert remaining documents
+| if (documents.length > 0) {
+|
+|     db.aggex.insertMany(documents);
+| }
+| print("5000 documents inserted successfully into aggex!");
+
+5000 documents inserted successfully into aggex!
+
+Atlas atlas-104b3m-shard-0 [primary] PCEA24IT011>
+
+Atlas atlas-104b3m-shard-0 [primary] PCEA24IT011> db.aggex.aggregate ( [ { $match : { category : "Beauty" } } ] )
+[
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f400'),
+    productId: 'PROD00004',
+    productName: 'Boat Skincare 4',
+    category: 'Beauty',
+    subCategory: 'Skincare',
+    brand: 'Boat',
+    price: 36942,
+    discountPercentage: 8,
+    discountedPrice: 33987,
+    quantity: 4,
+    revenue: 135948,
+    rating: 3.5,
+    reviewCount: 2290,
+    stock: 182,
+    inStock: true,
+    seller: { name: 'PrimeRetail', sellerRating: 1 },
+    customer: { customerId: 'CUS0327', city: 'Pune', state: 'Kerala', age: 65 },
+    payment: { method: 'Net Banking', transactionId: 'TXNssbrbayxov' },
+    orderStatus: 'Cancelled',
+    orderDate: ISODate('2026-01-18T01:05:47.650Z'),
+    tags: [ 'discount', 'discount' ],
+    specifications: { warranty: '2 years', color: 'Black', weight: 4.33 },
+    isFeatured: true,
+    createdAt: ISODate('2026-09-16T04:53:58.585Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f402'),
+    productId: 'PROD00006',
+    productName: 'LG Skincare 6',
+    category: 'Beauty',
+    subCategory: 'Skincare',
+    brand: 'LG',
+    price: 17532,
+    discountPercentage: 13,
+    discountedPrice: 15253,
+    quantity: 2,
+    revenue: 30506,
+    rating: 3.5,
+    reviewCount: 3801,
+    stock: 342,
+    inStock: true,
+    seller: { name: 'MegaStore', sellerRating: 1.1 },
+    customer: { customerId: 'CUS0197', city: 'Delhi', state: 'Tamil Nadu', age: 62 },
+    payment: { method: 'Debit Card', transactionId: 'TXNc8ibls7qhh' },
+    orderStatus: 'Delivered',
+    orderDate: ISODate('2024-07-31T03:57:18.640Z'),
+    tags: [ 'discount', 'new' ],
+    specifications: { warranty: '3 years', color: 'Blue', weight: 4.59 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.585Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f403'),
+    productId: 'PROD00007',
+    productName: 'Boat Makeup 7',
+    category: 'Beauty',
+    subCategory: 'Makeup',
+    brand: 'Boat',
+    price: 83482,
+    discountPercentage: 16,
+    discountedPrice: 70125,
+    quantity: 4,
+    revenue: 280500,
+    rating: 2.2,
+    reviewCount: 2024,
+    stock: 139,
+    inStock: true,
+    seller: { name: 'DigitalMart', sellerRating: 1.6 },
+    customer: { customerId: 'CUS0360', city: 'Mumbai', state: 'Kerala', age: 57 },
+    payment: { method: 'Cash on Delivery', transactionId: 'TXNs3twhg473d' },
+    orderStatus: 'Returned',
+    orderDate: ISODate('2025-10-05T14:40:56.748Z'),
+    tags: [ 'budget', 'new' ],
+    specifications: { warranty: '3 years', color: 'Blue', weight: 2.52 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.585Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f416'),
+    productId: 'PROD00026',
+    productName: 'Sony Haircare 26',
+    category: 'Beauty',
+    subCategory: 'Haircare',
+    brand: 'Sony',
+    price: 15086,
+    discountPercentage: 44,
+    discountedPrice: 8448,
+    quantity: 4,
+    revenue: 33792,
+    rating: 3.7,
+    reviewCount: 2550,
+    stock: 269,
+    inStock: true,
+    seller: { name: 'DigitalMart', sellerRating: 4.1 },
+    customer: {
+      customerId: 'CUS0197',
+      city: 'Hyderabad',
+      state: 'Karnataka',
+      age: 63
+    },
+    payment: { method: 'Cash on Delivery', transactionId: 'TXN8mfdql5ppn' },
+    orderStatus: 'Cancelled',
+    orderDate: ISODate('2024-06-16T19:47:03.713Z'),
+    tags: [ 'trending', 'best-seller' ],
+    specifications: { warranty: '1 years', color: 'Black', weight: 0.71 },
+    isFeatured: true,
+    createdAt: ISODate('2026-09-16T04:53:58.587Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f41d'),
+    productId: 'PROD00033',
+    productName: 'Sony Makeup 33',
+    category: 'Beauty',
+    subCategory: 'Makeup',
+    brand: 'Sony',
+    price: 62171,
+    discountPercentage: 9,
+    discountedPrice: 56576,
+    quantity: 3,
+    revenue: 169728,
+    rating: 4.2,
+    reviewCount: 2310,
+    stock: 221,
+    inStock: true,
+    seller: { name: 'SmartShop', sellerRating: 1.6 },
+    customer: { customerId: 'CUS0113', city: 'Mumbai', state: 'Telangana', age: 34 },
+    payment: { method: 'Debit Card', transactionId: 'TXNq9i2nns8rr' },
+    orderStatus: 'Cancelled',
+    orderDate: ISODate('2025-11-27T15:41:29.723Z'),
+    tags: [ 'limited-stock', 'discount' ],
+    specifications: { warranty: '3 years', color: 'White', weight: 0.59 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.587Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f424'),
+    productId: 'PROD00040',
+    productName: 'Boat Skincare 40',
+    category: 'Beauty',
+    subCategory: 'Skincare',
+    brand: 'Boat',
+    price: 39913,
+    discountPercentage: 36,
+    discountedPrice: 25544,
+    quantity: 1,
+    revenue: 25544,
+    rating: 3.5,
+    reviewCount: 2288,
+    stock: 489,
+    inStock: true,
+    seller: { name: 'MegaStore', sellerRating: 1.4 },
+    customer: {
+      customerId: 'CUS0746',
+      city: 'Ahmedabad',
+      state: 'West Bengal',
+      age: 20
+    },
+    payment: { method: 'Net Banking', transactionId: 'TXNhm5q4mn4b5' },
+    orderStatus: 'Delivered',
+    orderDate: ISODate('2026-02-06T18:10:02.581Z'),
+    tags: [ 'trending', 'trending' ],
+    specifications: { warranty: '2 years', color: 'Black', weight: 2.56 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.588Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f426'),
+    productId: 'PROD00042',
+    productName: 'Apple Makeup 42',
+    category: 'Beauty',
+    subCategory: 'Makeup',
+    brand: 'Apple',
+    price: 20895,
+    discountPercentage: 27,
+    discountedPrice: 15253,
+    quantity: 1,
+    revenue: 15253,
+    rating: 2.5,
+    reviewCount: 3482,
+    stock: 116,
+    inStock: true,
+    seller: { name: 'MegaStore', sellerRating: 2.6 },
+    customer: { customerId: 'CUS0848', city: 'Kolkata', state: 'Delhi', age: 56 },
+    payment: { method: 'UPI', transactionId: 'TXNnf67u0g8j' },
+    orderStatus: 'Processing',
+    orderDate: ISODate('2025-08-05T00:54:10.115Z'),
+    tags: [ 'budget', 'limited-stock' ],
+    specifications: { warranty: '1 years', color: 'Silver', weight: 4.57 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.588Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f42c'),
+    productId: 'PROD00048',
+    productName: 'AmazonBasics Makeup 48',
+    category: 'Beauty',
+    subCategory: 'Makeup',
+    brand: 'AmazonBasics',
+    price: 38430,
+    discountPercentage: 0,
+    discountedPrice: 38430,
+    quantity: 2,
+    revenue: 76860,
+    rating: 1.2,
+    reviewCount: 940,
+    stock: 362,
+    inStock: true,
+    seller: { name: 'SmartShop', sellerRating: 4.2 },
+    customer: { customerId: 'CUS0103', city: 'Chennai', state: 'Kerala', age: 37 },
+    payment: { method: 'Cash on Delivery', transactionId: 'TXNb9oi0xvq0a' },
+    orderStatus: 'Shipped',
+    orderDate: ISODate('2025-01-22T17:56:26.951Z'),
+    tags: [ 'best-seller', 'popular' ],
+    specifications: { warranty: '2 years', color: 'Silver', weight: 1.02 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.588Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f432'),
+    productId: 'PROD00054',
+    productName: 'LG Skincare 54',
+    category: 'Beauty',
+    subCategory: 'Skincare',
+    brand: 'LG',
+    price: 41621,
+    discountPercentage: 9,
+    discountedPrice: 37875,
+    quantity: 1,
+    revenue: 37875,
+    rating: 2.4,
+    reviewCount: 4900,
+    stock: 147,
+    inStock: true,
+    seller: { name: 'DigitalMart', sellerRating: 4.8 },
+    customer: { customerId: 'CUS0156', city: 'Mumbai', state: 'Kerala', age: 66 },
+    payment: { method: 'UPI', transactionId: 'TXNfej8tufyzz' },
+    orderStatus: 'Cancelled',
+    orderDate: ISODate('2025-04-11T16:27:42.414Z'),
+    tags: [ 'best-seller', 'new' ],
+    specifications: { warranty: '3 years', color: 'White', weight: 4.96 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.589Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f452'),
+    productId: 'PROD00086',
+    productName: 'HP Haircare 86',
+    category: 'Beauty',
+    subCategory: 'Haircare',
+    brand: 'HP',
+    price: 88214,
+    discountPercentage: 42,
+    discountedPrice: 51164,
+    quantity: 2,
+    revenue: 102328,
+    rating: 4.6,
+    reviewCount: 2392,
+    stock: 405,
+    inStock: true,
+    seller: { name: 'TechWorld', sellerRating: 1.6 },
+    customer: { customerId: 'CUS0008', city: 'Delhi', state: 'Gujarat', age: 54 },
+    payment: { method: 'Debit Card', transactionId: 'TXN51geyiiow6' },
+    orderStatus: 'Shipped',
+    orderDate: ISODate('2025-09-11T07:46:40.755Z'),
+    tags: [ 'budget', 'trending' ],
+    specifications: { warranty: '1 years', color: 'Red', weight: 4.95 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.590Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f461'),
+    productId: 'PROD00101',
+    productName: 'OnePlus Skincare 101',
+    category: 'Beauty',
+    subCategory: 'Skincare',
+    brand: 'OnePlus',
+    price: 52941,
+    discountPercentage: 8,
+    discountedPrice: 48706,
+    quantity: 5,
+    revenue: 243530,
+    rating: 2,
+    reviewCount: 2584,
+    stock: 413,
+    inStock: true,
+    seller: { name: 'SmartShop', sellerRating: 3 },
+    customer: {
+      customerId: 'CUS0078',
+      city: 'Bangalore',
+      state: 'Tamil Nadu',
+      age: 57
+    },
+    payment: { method: 'Cash on Delivery', transactionId: 'TXNpgti0yg189' },
+    orderStatus: 'Shipped',
+    orderDate: ISODate('2024-09-05T06:42:13.443Z'),
+    tags: [ 'limited-stock', 'best-seller' ],
+    specifications: { warranty: '2 years', color: 'White', weight: 1.27 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.591Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f466'),
+    productId: 'PROD00106',
+    productName: 'LG Makeup 106',
+    category: 'Beauty',
+    subCategory: 'Makeup',
+    brand: 'LG',
+    price: 48362,
+    discountPercentage: 21,
+    discountedPrice: 38206,
+    quantity: 3,
+    revenue: 114618,
+    rating: 4.3,
+    reviewCount: 206,
+    stock: 409,
+    inStock: true,
+    seller: { name: 'TechWorld', sellerRating: 4.9 },
+    customer: {
+      customerId: 'CUS0387',
+      city: 'Hyderabad',
+      state: 'Maharashtra',
+      age: 32
+    },
+    payment: { method: 'Credit Card', transactionId: 'TXN0lkdyjxlgx' },
+    orderStatus: 'Delivered',
+    orderDate: ISODate('2025-04-01T00:53:38.228Z'),
+    tags: [ 'best-seller', 'popular' ],
+    specifications: { warranty: '1 years', color: 'Silver', weight: 1.21 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.592Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f46b'),
+    productId: 'PROD00111',
+    productName: 'Sony Skincare 111',
+    category: 'Beauty',
+    subCategory: 'Skincare',
+    brand: 'Sony',
+    price: 30607,
+    discountPercentage: 29,
+    discountedPrice: 21731,
+    quantity: 2,
+    revenue: 43462,
+    rating: 2,
+    reviewCount: 639,
+    stock: 174,
+    inStock: true,
+    seller: { name: 'MegaStore', sellerRating: 2.3 },
+    customer: { customerId: 'CUS0789', city: 'Ahmedabad', state: 'Gujarat', age: 60 },
+    payment: { method: 'Net Banking', transactionId: 'TXNp880wsvlci' },
+    orderStatus: 'Cancelled',
+    orderDate: ISODate('2025-10-05T04:23:31.493Z'),
+    tags: [ 'trending', 'trending' ],
+    specifications: { warranty: '3 years', color: 'Red', weight: 4.22 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.592Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f49e'),
+    productId: 'PROD00162',
+    productName: 'Nike Haircare 162',
+    category: 'Beauty',
+    subCategory: 'Haircare',
+    brand: 'Nike',
+    price: 14337,
+    discountPercentage: 25,
+    discountedPrice: 10753,
+    quantity: 4,
+    revenue: 43012,
+    rating: 4.4,
+    reviewCount: 636,
+    stock: 209,
+    inStock: true,
+    seller: { name: 'PrimeRetail', sellerRating: 1.2 },
+    customer: { customerId: 'CUS0086', city: 'Bangalore', state: 'Gujarat', age: 29 },
+    payment: { method: 'Cash on Delivery', transactionId: 'TXNxvydte04jz' },
+    orderStatus: 'Cancelled',
+    orderDate: ISODate('2025-01-28T21:06:11.727Z'),
+    tags: [ 'limited-stock', 'discount' ],
+    specifications: { warranty: '3 years', color: 'Silver', weight: 2.04 },
+    isFeatured: true,
+    createdAt: ISODate('2026-09-16T04:53:58.595Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f4a0'),
+    productId: 'PROD00164',
+    productName: 'Adidas Makeup 164',
+    category: 'Beauty',
+    subCategory: 'Makeup',
+    brand: 'Adidas',
+    price: 36767,
+    discountPercentage: 21,
+    discountedPrice: 29046,
+    quantity: 5,
+    revenue: 145230,
+    rating: 4.8,
+    reviewCount: 2128,
+    stock: 309,
+    inStock: true,
+    seller: { name: 'SmartShop', sellerRating: 1.6 },
+    customer: {
+      customerId: 'CUS0763',
+      city: 'Kolkata',
+      state: 'West Bengal',
+      age: 23
+    },
+    payment: { method: 'Debit Card', transactionId: 'TXNn53l28o14s' },
+    orderStatus: 'Returned',
+    orderDate: ISODate('2024-09-19T01:11:38.784Z'),
+    tags: [ 'premium', 'discount' ],
+    specifications: { warranty: '1 years', color: 'Silver', weight: 2.73 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.595Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f4ab'),
+    productId: 'PROD00175',
+    productName: 'Boat Makeup 175',
+    category: 'Beauty',
+    subCategory: 'Makeup',
+    brand: 'Boat',
+    price: 90390,
+    discountPercentage: 24,
+    discountedPrice: 68696,
+    quantity: 4,
+    revenue: 274784,
+    rating: 2.5,
+    reviewCount: 499,
+    stock: 219,
+    inStock: true,
+    seller: { name: 'DigitalMart', sellerRating: 1.7 },
+    customer: { customerId: 'CUS0326', city: 'Chennai', state: 'Gujarat', age: 49 },
+    payment: { method: 'Credit Card', transactionId: 'TXNvpqx4z8xnw' },
+    orderStatus: 'Returned',
+    orderDate: ISODate('2025-08-21T16:37:25.446Z'),
+    tags: [ 'premium', 'best-seller' ],
+    specifications: { warranty: '1 years', color: 'Red', weight: 5.48 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.595Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f4c0'),
+    productId: 'PROD00196',
+    productName: 'Adidas Haircare 196',
+    category: 'Beauty',
+    subCategory: 'Haircare',
+    brand: 'Adidas',
+    price: 1275,
+    discountPercentage: 48,
+    discountedPrice: 663,
+    quantity: 2,
+    revenue: 1326,
+    rating: 1.6,
+    reviewCount: 3395,
+    stock: 169,
+    inStock: true,
+    seller: { name: 'TechWorld', sellerRating: 2.8 },
+    customer: {
+      customerId: 'CUS0465',
+      city: 'Chennai',
+      state: 'Maharashtra',
+      age: 32
+    },
+    payment: { method: 'Cash on Delivery', transactionId: 'TXNbuyszut2wu' },
+    orderStatus: 'Shipped',
+    orderDate: ISODate('2025-04-06T02:15:16.175Z'),
+    tags: [ 'budget', 'limited-stock' ],
+    specifications: { warranty: '3 years', color: 'Black', weight: 1.5 },
+    isFeatured: true,
+    createdAt: ISODate('2026-09-16T04:53:58.597Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f4c4'),
+    productId: 'PROD00200',
+    productName: 'OnePlus Makeup 200',
+    category: 'Beauty',
+    subCategory: 'Makeup',
+    brand: 'OnePlus',
+    price: 76183,
+    discountPercentage: 47,
+    discountedPrice: 40377,
+    quantity: 3,
+    revenue: 121131,
+    rating: 3.6,
+    reviewCount: 639,
+    stock: 59,
+    inStock: true,
+    seller: { name: 'SmartShop', sellerRating: 3.2 },
+    customer: { customerId: 'CUS0853', city: 'Ahmedabad', state: 'Kerala', age: 47 },
+    payment: { method: 'Debit Card', transactionId: 'TXN19ay2s64fq' },
+    orderStatus: 'Cancelled',
+    orderDate: ISODate('2024-11-26T02:47:48.116Z'),
+    tags: [ 'trending', 'limited-stock' ],
+    specifications: { warranty: '1 years', color: 'Blue', weight: 2.81 },
+    isFeatured: true,
+    createdAt: ISODate('2026-09-16T04:53:58.597Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f4ca'),
+    productId: 'PROD00206',
+    productName: 'LG Haircare 206',
+    category: 'Beauty',
+    subCategory: 'Haircare',
+    brand: 'LG',
+    price: 42461,
+    discountPercentage: 50,
+    discountedPrice: 21231,
+    quantity: 5,
+    revenue: 106155,
+    rating: 3.9,
+    reviewCount: 345,
+    stock: 481,
+    inStock: true,
+    seller: { name: 'TechWorld', sellerRating: 3.6 },
+    customer: { customerId: 'CUS0504', city: 'Hyderabad', state: 'Kerala', age: 53 },
+    payment: { method: 'Credit Card', transactionId: 'TXNdru21gtam7' },
+    orderStatus: 'Shipped',
+    orderDate: ISODate('2025-01-29T09:22:19.925Z'),
+    tags: [ 'trending', 'discount' ],
+    specifications: { warranty: '3 years', color: 'White', weight: 5.16 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.597Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f4d0'),
+    productId: 'PROD00212',
+    productName: 'HP Makeup 212',
+    category: 'Beauty',
+    subCategory: 'Makeup',
+    brand: 'HP',
+    price: 89129,
+    discountPercentage: 50,
+    discountedPrice: 44565,
+    quantity: 3,
+    revenue: 133695,
+    rating: 2.2,
+    reviewCount: 1910,
+    stock: 452,
+    inStock: true,
+    seller: { name: 'TechWorld', sellerRating: 3.9 },
+    customer: {
+      customerId: 'CUS0657',
+      city: 'Bangalore',
+      state: 'Telangana',
+      age: 18
+    },
+    payment: { method: 'Cash on Delivery', transactionId: 'TXNzf0a6gk0u' },
+    orderStatus: 'Delivered',
+    orderDate: ISODate('2024-02-23T12:41:45.001Z'),
+    tags: [ 'budget', 'new' ],
+    specifications: { warranty: '1 years', color: 'Blue', weight: 5.21 },
+    isFeatured: true,
+    createdAt: ISODate('2026-09-16T04:53:58.598Z')
+  }
+]
+Type "it" for more
+Atlas atlas-104b3m-shard-0 [primary] PCEA24IT011> db.aggex.aggregate ( [ { $match : { price : { $gt : 40000 } } } ] )
+[
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f3fd'),
+    productId: 'PROD00001',
+    productName: 'AmazonBasics iPhone 1',
+    category: 'Mobiles',
+    subCategory: 'iPhone',
+    brand: 'AmazonBasics',
+    price: 51165,
+    discountPercentage: 29,
+    discountedPrice: 36327,
+    quantity: 4,
+    revenue: 145308,
+    rating: 5,
+    reviewCount: 2420,
+    stock: 279,
+    inStock: true,
+    seller: { name: 'PrimeRetail', sellerRating: 4.4 },
+    customer: { customerId: 'CUS0148', city: 'Ahmedabad', state: 'Gujarat', age: 49 },
+    payment: { method: 'Net Banking', transactionId: 'TXNs7z9y4eyki' },
+    orderStatus: 'Processing',
+    orderDate: ISODate('2026-05-28T18:28:32.528Z'),
+    tags: [ 'trending', 'premium' ],
+    specifications: { warranty: '1 years', color: 'Blue', weight: 4.66 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.585Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f403'),
+    productId: 'PROD00007',
+    productName: 'Boat Makeup 7',
+    category: 'Beauty',
+    subCategory: 'Makeup',
+    brand: 'Boat',
+    price: 83482,
+    discountPercentage: 16,
+    discountedPrice: 70125,
+    quantity: 4,
+    revenue: 280500,
+    rating: 2.2,
+    reviewCount: 2024,
+    stock: 139,
+    inStock: true,
+    seller: { name: 'DigitalMart', sellerRating: 1.6 },
+    customer: { customerId: 'CUS0360', city: 'Mumbai', state: 'Kerala', age: 57 },
+    payment: { method: 'Cash on Delivery', transactionId: 'TXNs3twhg473d' },
+    orderStatus: 'Returned',
+    orderDate: ISODate('2025-10-05T14:40:56.748Z'),
+    tags: [ 'budget', 'new' ],
+    specifications: { warranty: '3 years', color: 'Blue', weight: 2.52 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.585Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f405'),
+    productId: 'PROD00009',
+    productName: 'Boat Kids 9',
+    category: 'Fashion',
+    subCategory: 'Kids',
+    brand: 'Boat',
+    price: 76565,
+    discountPercentage: 35,
+    discountedPrice: 49767,
+    quantity: 3,
+    revenue: 149301,
+    rating: 1.6,
+    reviewCount: 4367,
+    stock: 272,
+    inStock: true,
+    seller: { name: 'RetailHub', sellerRating: 1.2 },
+    customer: { customerId: 'CUS0104', city: 'Bangalore', state: 'Delhi', age: 23 },
+    payment: { method: 'Net Banking', transactionId: 'TXN8yxpw4ouv6' },
+    orderStatus: 'Returned',
+    orderDate: ISODate('2025-07-01T08:00:53.241Z'),
+    tags: [ 'trending', 'new' ],
+    specifications: { warranty: '3 years', color: 'Black', weight: 0.8 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.586Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f406'),
+    productId: 'PROD00010',
+    productName: 'Lenovo Fitness 10',
+    category: 'Sports',
+    subCategory: 'Fitness',
+    brand: 'Lenovo',
+    price: 46075,
+    discountPercentage: 27,
+    discountedPrice: 33635,
+    quantity: 2,
+    revenue: 67270,
+    rating: 4.8,
+    reviewCount: 1460,
+    stock: 414,
+    inStock: true,
+    seller: { name: 'TechWorld', sellerRating: 3.3 },
+    customer: { customerId: 'CUS0370', city: 'Kochi', state: 'Maharashtra', age: 39 },
+    payment: { method: 'Cash on Delivery', transactionId: 'TXNczedwajijx' },
+    orderStatus: 'Delivered',
+    orderDate: ISODate('2024-09-13T19:13:04.105Z'),
+    tags: [ 'best-seller', 'best-seller' ],
+    specifications: { warranty: '3 years', color: 'White', weight: 0.93 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.586Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f408'),
+    productId: 'PROD00012',
+    productName: 'LG Beverages 12',
+    category: 'Grocery',
+    subCategory: 'Beverages',
+    brand: 'LG',
+    price: 41054,
+    discountPercentage: 20,
+    discountedPrice: 32843,
+    quantity: 4,
+    revenue: 131372,
+    rating: 4.7,
+    reviewCount: 4985,
+    stock: 443,
+    inStock: true,
+    seller: { name: 'RetailHub', sellerRating: 1.2 },
+    customer: {
+      customerId: 'CUS0541',
+      city: 'Coimbatore',
+      state: 'West Bengal',
+      age: 61
+    },
+    payment: { method: 'Credit Card', transactionId: 'TXNg4632wdc5q' },
+    orderStatus: 'Shipped',
+    orderDate: ISODate('2026-06-29T00:56:42.836Z'),
+    tags: [ 'best-seller', 'discount' ],
+    specifications: { warranty: '2 years', color: 'Red', weight: 4.85 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.586Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f409'),
+    productId: 'PROD00013',
+    productName: 'Adidas Student 13',
+    category: 'Laptops',
+    subCategory: 'Student',
+    brand: 'Adidas',
+    price: 61357,
+    discountPercentage: 39,
+    discountedPrice: 37428,
+    quantity: 5,
+    revenue: 187140,
+    rating: 2.8,
+    reviewCount: 2416,
+    stock: 287,
+    inStock: true,
+    seller: { name: 'TechWorld', sellerRating: 2 },
+    customer: { customerId: 'CUS0489', city: 'Mumbai', state: 'Karnataka', age: 45 },
+    payment: { method: 'Net Banking', transactionId: 'TXNeimvtevxlc' },
+    orderStatus: 'Shipped',
+    orderDate: ISODate('2026-07-24T03:43:08.734Z'),
+    tags: [ 'trending', 'budget' ],
+    specifications: { warranty: '1 years', color: 'Black', weight: 0.92 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.586Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f40a'),
+    productId: 'PROD00014',
+    productName: 'Boat Sofa 14',
+    category: 'Furniture',
+    subCategory: 'Sofa',
+    brand: 'Boat',
+    price: 48362,
+    discountPercentage: 22,
+    discountedPrice: 37722,
+    quantity: 3,
+    revenue: 113166,
+    rating: 2.9,
+    reviewCount: 4832,
+    stock: 117,
+    inStock: true,
+    seller: { name: 'SmartShop', sellerRating: 3.9 },
+    customer: { customerId: 'CUS0145', city: 'Delhi', state: 'Kerala', age: 32 },
+    payment: { method: 'UPI', transactionId: 'TXNs3unl7h0de' },
+    orderStatus: 'Returned',
+    orderDate: ISODate('2024-01-07T22:53:43.886Z'),
+    tags: [ 'popular', 'discount' ],
+    specifications: { warranty: '3 years', color: 'Silver', weight: 3.94 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.586Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f40b'),
+    productId: 'PROD00015',
+    productName: 'LG Men 15',
+    category: 'Fashion',
+    subCategory: 'Men',
+    brand: 'LG',
+    price: 60055,
+    discountPercentage: 9,
+    discountedPrice: 54650,
+    quantity: 5,
+    revenue: 273250,
+    rating: 5,
+    reviewCount: 2112,
+    stock: 473,
+    inStock: true,
+    seller: { name: 'TechWorld', sellerRating: 1.5 },
+    customer: { customerId: 'CUS0004', city: 'Pune', state: 'Karnataka', age: 40 },
+    payment: { method: 'Debit Card', transactionId: 'TXNfag0f4k8vc' },
+    orderStatus: 'Processing',
+    orderDate: ISODate('2024-08-07T08:11:01.440Z'),
+    tags: [ 'popular', 'budget' ],
+    specifications: { warranty: '1 years', color: 'Blue', weight: 4.62 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.586Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f411'),
+    productId: 'PROD00021',
+    productName: 'Dell Fiction 21',
+    category: 'Books',
+    subCategory: 'Fiction',
+    brand: 'Dell',
+    price: 61143,
+    discountPercentage: 37,
+    discountedPrice: 38520,
+    quantity: 1,
+    revenue: 38520,
+    rating: 1.9,
+    reviewCount: 1914,
+    stock: 460,
+    inStock: true,
+    seller: { name: 'SmartShop', sellerRating: 1 },
+    customer: { customerId: 'CUS0427', city: 'Kochi', state: 'Maharashtra', age: 49 },
+    payment: { method: 'Credit Card', transactionId: 'TXN445kiyzlpn' },
+    orderStatus: 'Shipped',
+    orderDate: ISODate('2024-01-10T09:04:50.481Z'),
+    tags: [ 'discount', 'limited-stock' ],
+    specifications: { warranty: '1 years', color: 'Silver', weight: 2.7 },
+    isFeatured: true,
+    createdAt: ISODate('2026-09-16T04:53:58.587Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f414'),
+    productId: 'PROD00024',
+    productName: 'Dell Speaker 24',
+    category: 'Electronics',
+    subCategory: 'Speaker',
+    brand: 'Dell',
+    price: 43362,
+    discountPercentage: 42,
+    discountedPrice: 25150,
+    quantity: 2,
+    revenue: 50300,
+    rating: 4.2,
+    reviewCount: 195,
+    stock: 17,
+    inStock: true,
+    seller: { name: 'MegaStore', sellerRating: 4.2 },
+    customer: { customerId: 'CUS0669', city: 'Kochi', state: 'West Bengal', age: 37 },
+    payment: { method: 'Cash on Delivery', transactionId: 'TXNds5i6a8ss7' },
+    orderStatus: 'Returned',
+    orderDate: ISODate('2024-05-03T13:13:44.772Z'),
+    tags: [ 'discount', 'popular' ],
+    specifications: { warranty: '3 years', color: 'Blue', weight: 2.67 },
+    isFeatured: true,
+    createdAt: ISODate('2026-09-16T04:53:58.587Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f417'),
+    productId: 'PROD00027',
+    productName: 'AmazonBasics Microwave 27',
+    category: 'Home Appliances',
+    subCategory: 'Microwave',
+    brand: 'AmazonBasics',
+    price: 56032,
+    discountPercentage: 44,
+    discountedPrice: 31378,
+    quantity: 2,
+    revenue: 62756,
+    rating: 1.1,
+    reviewCount: 4785,
+    stock: 374,
+    inStock: true,
+    seller: { name: 'MegaStore', sellerRating: 1.5 },
+    customer: {
+      customerId: 'CUS0470',
+      city: 'Ahmedabad',
+      state: 'Telangana',
+      age: 45
+    },
+    payment: { method: 'Net Banking', transactionId: 'TXNp0x5yezw3l' },
+    orderStatus: 'Delivered',
+    orderDate: ISODate('2025-09-17T17:48:51.286Z'),
+    tags: [ 'trending', 'budget' ],
+    specifications: { warranty: '2 years', color: 'Black', weight: 5.19 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.587Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f41a'),
+    productId: 'PROD00030',
+    productName: 'Nike Programming 30',
+    category: 'Books',
+    subCategory: 'Programming',
+    brand: 'Nike',
+    price: 55941,
+    discountPercentage: 29,
+    discountedPrice: 39718,
+    quantity: 5,
+    revenue: 198590,
+    rating: 4.7,
+    reviewCount: 2790,
+    stock: 304,
+    inStock: true,
+    seller: { name: 'DigitalMart', sellerRating: 3.3 },
+    customer: {
+      customerId: 'CUS0506',
+      city: 'Ahmedabad',
+      state: 'Maharashtra',
+      age: 59
+    },
+    payment: { method: 'Cash on Delivery', transactionId: 'TXNc87yaa5te2' },
+    orderStatus: 'Returned',
+    orderDate: ISODate('2026-06-02T03:37:02.323Z'),
+    tags: [ 'trending', 'new' ],
+    specifications: { warranty: '3 years', color: 'Blue', weight: 2.54 },
+    isFeatured: true,
+    createdAt: ISODate('2026-09-16T04:53:58.587Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f41b'),
+    productId: 'PROD00031',
+    productName: 'Dell Kids 31',
+    category: 'Fashion',
+    subCategory: 'Kids',
+    brand: 'Dell',
+    price: 92457,
+    discountPercentage: 5,
+    discountedPrice: 87834,
+    quantity: 4,
+    revenue: 351336,
+    rating: 1.1,
+    reviewCount: 42,
+    stock: 330,
+    inStock: true,
+    seller: { name: 'MegaStore', sellerRating: 4.1 },
+    customer: {
+      customerId: 'CUS0413',
+      city: 'Hyderabad',
+      state: 'Telangana',
+      age: 57
+    },
+    payment: { method: 'Debit Card', transactionId: 'TXNiwmo4j9fl3' },
+    orderStatus: 'Processing',
+    orderDate: ISODate('2025-07-18T12:07:15.887Z'),
+    tags: [ 'limited-stock', 'budget' ],
+    specifications: { warranty: '3 years', color: 'White', weight: 4.31 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.587Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f41d'),
+    productId: 'PROD00033',
+    productName: 'Sony Makeup 33',
+    category: 'Beauty',
+    subCategory: 'Makeup',
+    brand: 'Sony',
+    price: 62171,
+    discountPercentage: 9,
+    discountedPrice: 56576,
+    quantity: 3,
+    revenue: 169728,
+    rating: 4.2,
+    reviewCount: 2310,
+    stock: 221,
+    inStock: true,
+    seller: { name: 'SmartShop', sellerRating: 1.6 },
+    customer: { customerId: 'CUS0113', city: 'Mumbai', state: 'Telangana', age: 34 },
+    payment: { method: 'Debit Card', transactionId: 'TXNq9i2nns8rr' },
+    orderStatus: 'Cancelled',
+    orderDate: ISODate('2025-11-27T15:41:29.723Z'),
+    tags: [ 'limited-stock', 'discount' ],
+    specifications: { warranty: '3 years', color: 'White', weight: 0.59 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.587Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f420'),
+    productId: 'PROD00036',
+    productName: 'OnePlus Education 36',
+    category: 'Books',
+    subCategory: 'Education',
+    brand: 'OnePlus',
+    price: 88415,
+    discountPercentage: 41,
+    discountedPrice: 52165,
+    quantity: 2,
+    revenue: 104330,
+    rating: 4,
+    reviewCount: 2987,
+    stock: 143,
+    inStock: true,
+    seller: { name: 'DigitalMart', sellerRating: 2.4 },
+    customer: { customerId: 'CUS0885', city: 'Kolkata', state: 'Delhi', age: 49 },
+    payment: { method: 'UPI', transactionId: 'TXNb39a0lq63m' },
+    orderStatus: 'Returned',
+    orderDate: ISODate('2024-12-09T21:57:37.138Z'),
+    tags: [ 'discount', 'best-seller' ],
+    specifications: { warranty: '1 years', color: 'Black', weight: 1.34 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.588Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f421'),
+    productId: 'PROD00037',
+    productName: 'Nike Staples 37',
+    category: 'Grocery',
+    subCategory: 'Staples',
+    brand: 'Nike',
+    price: 40651,
+    discountPercentage: 40,
+    discountedPrice: 24391,
+    quantity: 1,
+    revenue: 24391,
+    rating: 2.9,
+    reviewCount: 912,
+    stock: 476,
+    inStock: true,
+    seller: { name: 'DigitalMart', sellerRating: 2.1 },
+    customer: {
+      customerId: 'CUS0137',
+      city: 'Kolkata',
+      state: 'West Bengal',
+      age: 50
+    },
+    payment: { method: 'Debit Card', transactionId: 'TXNk01s4ckaua' },
+    orderStatus: 'Processing',
+    orderDate: ISODate('2025-04-16T05:23:19.639Z'),
+    tags: [ 'trending', 'limited-stock' ],
+    specifications: { warranty: '3 years', color: 'Black', weight: 1.46 },
+    isFeatured: true,
+    createdAt: ISODate('2026-09-16T04:53:58.588Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f423'),
+    productId: 'PROD00039',
+    productName: 'Apple Speaker 39',
+    category: 'Electronics',
+    subCategory: 'Speaker',
+    brand: 'Apple',
+    price: 65079,
+    discountPercentage: 30,
+    discountedPrice: 45555,
+    quantity: 5,
+    revenue: 227775,
+    rating: 4.8,
+    reviewCount: 3040,
+    stock: 225,
+    inStock: true,
+    seller: { name: 'PrimeRetail', sellerRating: 3.9 },
+    customer: { customerId: 'CUS0918', city: 'Kochi', state: 'Karnataka', age: 32 },
+    payment: { method: 'Debit Card', transactionId: 'TXNx8lhrfd9pm' },
+    orderStatus: 'Shipped',
+    orderDate: ISODate('2026-04-19T06:58:58.469Z'),
+    tags: [ 'popular', 'budget' ],
+    specifications: { warranty: '3 years', color: 'Red', weight: 3.47 },
+    isFeatured: true,
+    createdAt: ISODate('2026-09-16T04:53:58.588Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f425'),
+    productId: 'PROD00041',
+    productName: 'Apple Sofa 41',
+    category: 'Furniture',
+    subCategory: 'Sofa',
+    brand: 'Apple',
+    price: 80495,
+    discountPercentage: 3,
+    discountedPrice: 78080,
+    quantity: 4,
+    revenue: 312320,
+    rating: 1.9,
+    reviewCount: 4023,
+    stock: 162,
+    inStock: true,
+    seller: { name: 'RetailHub', sellerRating: 3.1 },
+    customer: { customerId: 'CUS0262', city: 'Delhi', state: 'Delhi', age: 40 },
+    payment: { method: 'Credit Card', transactionId: 'TXNyras7qvad9' },
+    orderStatus: 'Cancelled',
+    orderDate: ISODate('2024-12-20T06:58:28.760Z'),
+    tags: [ 'limited-stock', 'budget' ],
+    specifications: { warranty: '1 years', color: 'Silver', weight: 1.32 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.588Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f427'),
+    productId: 'PROD00043',
+    productName: 'HP Cricket 43',
+    category: 'Sports',
+    subCategory: 'Cricket',
+    brand: 'HP',
+    price: 87113,
+    discountPercentage: 18,
+    discountedPrice: 71433,
+    quantity: 1,
+    revenue: 71433,
+    rating: 1.5,
+    reviewCount: 577,
+    stock: 32,
+    inStock: true,
+    seller: { name: 'SmartShop', sellerRating: 4.3 },
+    customer: {
+      customerId: 'CUS0605',
+      city: 'Hyderabad',
+      state: 'Tamil Nadu',
+      age: 61
+    },
+    payment: { method: 'UPI', transactionId: 'TXNardtuw5k21' },
+    orderStatus: 'Returned',
+    orderDate: ISODate('2025-12-16T14:03:08.108Z'),
+    tags: [ 'discount', 'discount' ],
+    specifications: { warranty: '3 years', color: 'Silver', weight: 1.82 },
+    isFeatured: true,
+    createdAt: ISODate('2026-09-16T04:53:58.588Z')
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f428'),
+    productId: 'PROD00044',
+    productName: 'OnePlus Student 44',
+    category: 'Laptops',
+    subCategory: 'Student',
+    brand: 'OnePlus',
+    price: 58618,
+    discountPercentage: 47,
+    discountedPrice: 31068,
+    quantity: 3,
+    revenue: 93204,
+    rating: 2,
+    reviewCount: 4277,
+    stock: 308,
+    inStock: true,
+    seller: { name: 'RetailHub', sellerRating: 4.9 },
+    customer: { customerId: 'CUS0703', city: 'Hyderabad', state: 'Delhi', age: 43 },
+    payment: { method: 'Cash on Delivery', transactionId: 'TXNdm3kgdang3' },
+    orderStatus: 'Shipped',
+    orderDate: ISODate('2025-08-24T18:28:00.818Z'),
+    tags: [ 'premium', 'discount' ],
+    specifications: { warranty: '2 years', color: 'Silver', weight: 1.26 },
+    isFeatured: false,
+    createdAt: ISODate('2026-09-16T04:53:58.588Z')
+  }
+]
+Type "it" for more
+Atlas atlas-104b3m-shard-0 [primary] PCEA24IT011> db.aggex.aggregate ( [ { $project : { productId : 1 , productName : 1 , price : 1 } } ] )
+[
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f3fd'),
+    productId: 'PROD00001',
+    productName: 'AmazonBasics iPhone 1',
+    price: 51165
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f3fe'),
+    productId: 'PROD00002',
+    productName: 'Samsung Cricket 2',
+    price: 39977
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f3ff'),
+    productId: 'PROD00003',
+    productName: 'Sony Programming 3',
+    price: 2935
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f400'),
+    productId: 'PROD00004',
+    productName: 'Boat Skincare 4',
+    price: 36942
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f401'),
+    productId: 'PROD00005',
+    productName: 'HP Refrigerator 5',
+    price: 30479
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f402'),
+    productId: 'PROD00006',
+    productName: 'LG Skincare 6',
+    price: 17532
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f403'),
+    productId: 'PROD00007',
+    productName: 'Boat Makeup 7',
+    price: 83482
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f404'),
+    productId: 'PROD00008',
+    productName: 'Boat Washing Machine 8',
+    price: 21310
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f405'),
+    productId: 'PROD00009',
+    productName: 'Boat Kids 9',
+    price: 76565
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f406'),
+    productId: 'PROD00010',
+    productName: 'Lenovo Fitness 10',
+    price: 46075
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f407'),
+    productId: 'PROD00011',
+    productName: 'Sony Education 11',
+    price: 28470
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f408'),
+    productId: 'PROD00012',
+    productName: 'LG Beverages 12',
+    price: 41054
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f409'),
+    productId: 'PROD00013',
+    productName: 'Adidas Student 13',
+    price: 61357
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f40a'),
+    productId: 'PROD00014',
+    productName: 'Boat Sofa 14',
+    price: 48362
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f40b'),
+    productId: 'PROD00015',
+    productName: 'LG Men 15',
+    price: 60055
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f40c'),
+    productId: 'PROD00016',
+    productName: 'HP Education 16',
+    price: 29493
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f40d'),
+    productId: 'PROD00017',
+    productName: 'Adidas Fitness 17',
+    price: 32937
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f40e'),
+    productId: 'PROD00018',
+    productName: 'Samsung Washing Machine 18',
+    price: 26640
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f40f'),
+    productId: 'PROD00019',
+    productName: 'Nike Feature Phone 19',
+    price: 2898
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f410'),
+    productId: 'PROD00020',
+    productName: 'Lenovo Staples 20',
+    price: 28773
+  }
+]
+Type "it" for more
+Atlas atlas-104b3m-shard-0 [primary] PCEA24IT011> db.aggex.aggregate ( [ { $project : { $sort : { price : -1 } } ] )
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:63)
+
+> 1 | db.aggex.aggregate ( [ { $project : { $sort : { price : -1 } } ] )
+    |                                                                ^
+  2 |
+
+Atlas atlas-104b3m-shard-0 [primary] PCEA24IT011> db.aggex.aggregate ( [ { $project : { $sort : { price : -1 } } } ] )
+MongoServerError[Location16410]: Invalid $project :: caused by :: Consider using $getField or $setField for a field path with '.' or '$'. :: caused by :: FieldPath field names may not start with '$', given '$sort'.
+Atlas atlas-104b3m-shard-0 [primary] PCEA24IT011> db.aggex.aggregate ( [ { $project : { $group : { -id : "$category" } } ] )
+Uncaught:
+SyntaxError: Unexpected token (1:49)
+
+> 1 | db.aggex.aggregate ( [ { $project : { $group : { -id : "$category" } } ] )
+    |                                                  ^
+  2 |
+
+Atlas atlas-104b3m-shard-0 [primary] PCEA24IT011> db.aggex.aggregate ( [ { $project : { $group : { _id : "$category" } } ] )
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:71)
+
+> 1 | db.aggex.aggregate ( [ { $project : { $group : { _id : "$category" } } ] )
+    |                                                                        ^
+  2 |
+
+Atlas atlas-104b3m-shard-0 [primary] PCEA24IT011> db.aggex.aggregate ( [ { $project : { productId : 1 , productName : 1 , price : 1 } } ] )
+[
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f3fd'),
+    productId: 'PROD00001',
+    productName: 'AmazonBasics iPhone 1',
+    price: 51165
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f3fe'),
+    productId: 'PROD00002',
+    productName: 'Samsung Cricket 2',
+    price: 39977
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f3ff'),
+    productId: 'PROD00003',
+    productName: 'Sony Programming 3',
+    price: 2935
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f400'),
+    productId: 'PROD00004',
+    productName: 'Boat Skincare 4',
+    price: 36942
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f401'),
+    productId: 'PROD00005',
+    productName: 'HP Refrigerator 5',
+    price: 30479
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f402'),
+    productId: 'PROD00006',
+    productName: 'LG Skincare 6',
+    price: 17532
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f403'),
+    productId: 'PROD00007',
+    productName: 'Boat Makeup 7',
+    price: 83482
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f404'),
+    productId: 'PROD00008',
+    productName: 'Boat Washing Machine 8',
+    price: 21310
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f405'),
+    productId: 'PROD00009',
+    productName: 'Boat Kids 9',
+    price: 76565
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f406'),
+    productId: 'PROD00010',
+    productName: 'Lenovo Fitness 10',
+    price: 46075
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f407'),
+    productId: 'PROD00011',
+    productName: 'Sony Education 11',
+    price: 28470
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f408'),
+    productId: 'PROD00012',
+    productName: 'LG Beverages 12',
+    price: 41054
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f409'),
+    productId: 'PROD00013',
+    productName: 'Adidas Student 13',
+    price: 61357
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f40a'),
+    productId: 'PROD00014',
+    productName: 'Boat Sofa 14',
+    price: 48362
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f40b'),
+    productId: 'PROD00015',
+    productName: 'LG Men 15',
+    price: 60055
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f40c'),
+    productId: 'PROD00016',
+    productName: 'HP Education 16',
+    price: 29493
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f40d'),
+    productId: 'PROD00017',
+    productName: 'Adidas Fitness 17',
+    price: 32937
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f40e'),
+    productId: 'PROD00018',
+    productName: 'Samsung Washing Machine 18',
+    price: 26640
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f40f'),
+    productId: 'PROD00019',
+    productName: 'Nike Feature Phone 19',
+    price: 2898
+  },
+  {
+    _id: ObjectId('6aaa20e66924e0f6aa23f410'),
+    productId: 'PROD00020',
+    productName: 'Lenovo Staples 20',
+    price: 28773
+  }
+]
+Type "it" for more
+Atlas atlas-104b3m-shard-0 [primary] PCEA24IT011>
+(To exit, press Ctrl+C again or Ctrl+D or type .exit)
+Atlas atla
