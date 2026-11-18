@@ -1,0 +1,82 @@
+SCENARIOS 1
+TASK 1
+db.products.updateOne(
+  { name: "Keyboard" },
+  { $set: { price: 1400 } }
+)
+
+Output
+
+{ acknowledged: true, insertedId: null, matchedCount: 1,
+  modifiedCount: 1, upsertedCount: 0 }
+
+Check: `db.products.findOne({ name: "Keyboard" })` now shows `price: 1400`.
+
+TASK 2
+db.products.updateOne(
+  { name: "Wireless Mouse" },
+  { $inc: { stock: 25 } }
+)
+
+Output: `matchedCount: 1, modifiedCount: 1`. The stock of Wireless Mouse changes from 50 to 75.
+
+TASK 3
+db.products.updateMany(
+  {},
+  { $unset: { oldCode: "" } }
+)
+```
+Output
+```js
+{ acknowledged: true, insertedId: null, matchedCount: 8,
+  modifiedCount: 2, upsertedCount: 0 }
+
+TASK 4
+db.products.replaceOne(
+  { _id: 3 },
+  { name: "USB-C Cable", category: "Accessories", price: 350,
+    stock: 100, discontinued: false }
+)
+```
+Output
+```js
+{ acknowledged: true, insertedId: null, matchedCount: 1,
+  modifiedCount: 1, upsertedCount: 0 }
+```
+`db.products.findOne({ _id: 3 })` returns:
+```js
+{ _id: 3, name: 'USB-C Cable', category: 'Accessories',
+  price: 350, stock: 100, discontinued: false }
+
+TASK 5
+db.products.deleteOne({ name: "Old Floppy Drive" })
+```
+Output
+```js
+{ acknowledged: true, deletedCount: 1 }
+
+TASK 6
+db.products.deleteMany({ discontinued: true })
+```
+Output
+```js
+{ acknowledged: true, deletedCount: 2 }
+
+TASK 7
+db.products.aggregate([
+  { $match: { price: { $gte: 500 } } },
+  { $group: {
+      _id: "$category",
+      totalStock: { $sum: "$stock" },
+      avgPrice:   { $avg: "$price" }
+  } },
+  { $sort: { totalStock: -1 } },
+  { $project: { _id: 0, category: "$_id", totalStock: 1, avgPrice: 1 } }
+])
+```
+Output
+```js
+[
+  { category: 'Accessories', totalStock: 105, avgPrice: 1100 },
+  { category: 'Computers',   totalStock: 25,  avgPrice: 33500 }
+]
