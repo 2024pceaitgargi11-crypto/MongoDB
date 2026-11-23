@@ -1,0 +1,134 @@
+SCENARIO 1.1
+
+use college
+
+//1.
+db.students.insertOne({
+    rollNo: 101,
+    name: "Arun",
+    dept: "CSE",
+    marks: 78,
+    city: "Chennai"
+})
+
+//OUTPUT:
+{
+    acknowledged: true,
+    insertedId: ObjectId("...")
+}
+
+
+//2.
+db.students.insertMany([
+    {
+        rollNo: 102,
+        name: "Priya",
+        dept: "IT",
+        marks: 88,
+        city: "Salem"
+    },
+    {
+        rollNo: 103,
+        name: "Karthik",
+        dept: "CSE",
+        marks: 85,
+        city: "Chennai"
+    },
+    {
+        rollNo: 104,
+        name: "Meena",
+        dept: "ECE",
+        marks: 75,
+        city: "Madurai"
+    },
+    {
+        rollNo: 105,
+        name: "Suresh",
+        dept: "CSE",
+        marks: 91,
+        city: "Trichy"
+    }
+])
+
+//OUTPUT:
+{
+    acknowledged: true,
+    insertedIds: {
+        '0': ObjectId("..."),
+        '1': ObjectId("..."),
+        '2': ObjectId("..."),
+        '3': ObjectId("...")
+    }
+}
+
+//3.
+db.students.find()
+
+db.students.find({ dept: "CSE" })
+
+//OUTPUT:
+[
+    {
+        rollNo: 101,
+        name: "Arun",
+        dept: "CSE",
+        marks: 78,
+        city: "Chennai"
+    },
+    {
+        rollNo: 103,
+        name: "Karthik",
+        dept: "CSE",
+        marks: 62,
+        city: "Chennai"
+    },
+    {
+        rollNo: 105,
+        name: "Suresh",
+        dept: "CSE",
+        marks: 91,
+        city: "Trichy"
+    }
+]
+
+//4.
+db.students.updateOne(
+    { rollNo: 103 },
+    { $set: { marks: 68 } }
+)
+
+//OUTPUT:
+{
+    acknowledged: true,
+    matchedCount: 1,
+    modifiedCount: 1,
+    upsertedCount: 0
+}
+
+//5.
+db.students.updateMany(
+    { dept: "CSE" },
+    { $set: { semester: 3 } }
+)
+
+//OUTPUT:
+{
+    acknowledged: true,
+    matchedCount: 3,
+    modifiedCount: 3,
+    upsertedCount: 0
+}
+
+//6.
+db.students.deleteOne({ rollNo: 104 })
+
+//OUTPUT:
+{
+    acknowledged: true,
+    deletedCount: 1
+}
+//7.
+db.students.countDocuments()
+
+//OUTPUT:
+4

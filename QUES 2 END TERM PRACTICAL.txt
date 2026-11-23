@@ -1,0 +1,227 @@
+SCENARIO 1.2
+use hr
+
+//1.
+db.employees.insertMany([
+    {
+        empId: 1,
+        name: "Anita",
+        dept: "HR",
+        salary: 42000,
+        city: "Chennai"
+    },
+    {
+        empId: 2,
+        name: "Bala",
+        dept: "IT",
+        salary: 65000,
+        city: "Bengaluru"
+    },
+    {
+        empId: 3,
+        name: "Charan",
+        dept: "IT",
+        salary: 58000,
+        city: "Chennai"
+    },
+    {
+        empId: 4,
+        name: "Deepa",
+        dept: "Finance",
+        salary: 80000,
+        city: "Mumbai"
+    },
+    {
+        empId: 5,
+        name: "Elan",
+        dept: "IT",
+        salary: 72000,
+        city: "Chennai"
+    },
+    {
+        empId: 6,
+        name: "Farah",
+        dept: "HR",
+        salary: 45000,
+        city: "Delhi"
+    },
+    {
+        empId: 7,
+        name: "Gopal",
+        dept: "Finance",
+        salary: 61000,
+        city: "Chennai"
+    },
+    {
+        empId: 8,
+        name: "Hema",
+        dept: "Sales",
+        salary: 38000,
+        city: "Hyderabad"
+    }
+])
+
+//OUTPUT:
+{
+    acknowledged: true,
+    insertedIds: {
+        '0': ObjectId("..."),
+        '1': ObjectId("..."),
+        '2': ObjectId("..."),
+        '3': ObjectId("..."),
+        '4': ObjectId("..."),
+        '5': ObjectId("..."),
+        '6': ObjectId("..."),
+        '7': ObjectId("...")
+    }
+}
+
+//2.
+db.employees.find({
+    salary: { $gt: 60000 }
+})
+
+//OUTPUT:
+[
+    { empId: 2, name: "Bala", dept: "IT",
+      salary: 65000, city: "Bengaluru" },
+
+    { empId: 5, name: "Elan", dept: "IT",
+      salary: 72000, city: "Chennai" },
+
+    { empId: 7, name: "Gopal", dept: "Finance",
+      salary: 61000, city: "Chennai" }
+]
+//3.
+db.employees.find({
+    salary: {
+        $gte: 45000,
+        $lte: 60000
+    }
+})
+
+//OUTPUT:
+[
+    { empId: 3, name: "Charan", dept: "IT",
+      salary: 58000, city: "Chennai" },
+
+    { empId: 4, name: "Deepa", dept: "Finance",
+      salary: 50000, city: "Mumbai" },
+
+    { empId: 6, name: "Farah", dept: "HR",
+      salary: 45000, city: "Delhi" }
+]
+
+//4.
+db.employees.find({
+    dept: { $in: ["IT", "Finance"] }
+})
+
+//OUTPUT:
+[
+    { empId: 2, name: "Bala", dept: "IT",
+      salary: 65000, city: "Bengaluru" },
+
+    { empId: 3, name: "Charan", dept: "IT",
+      salary: 58000, city: "Chennai" },
+
+    { empId: 4, name: "Deepa", dept: "Finance",
+      salary: 50000, city: "Mumbai" },
+
+    { empId: 5, name: "Elan", dept: "IT",
+      salary: 72000, city: "Chennai" },
+
+    { empId: 7, name: "Gopal", dept: "Finance",
+      salary: 61000, city: "Chennai" }
+]
+//5.
+db.employees.find({
+    city: "Chennai",
+    salary: { $gt: 50000 }
+})
+
+db.employees.find({
+    $or: [
+        { dept: "HR" },
+        { salary: { $gt: 70000 } }
+    ]
+})
+
+//OUTPUT:
+[
+    { empId: 3, name: "Charan", dept: "IT",
+      salary: 58000, city: "Chennai" },
+
+    { empId: 5, name: "Elan", dept: "IT",
+      salary: 72000, city: "Chennai" },
+
+    { empId: 7, name: "Gopal", dept: "Finance",
+      salary: 61000, city: "Chennai" }
+]
+[
+    { empId: 1, name: "Anita", dept: "HR",
+      salary: 42000, city: "Chennai" },
+
+    { empId: 5, name: "Elan", dept: "IT",
+      salary: 72000, city: "Chennai" },
+
+    { empId: 6, name: "Farah", dept: "HR",
+      salary: 45000, city: "Delhi" }
+]
+
+//6.
+db.employees.find({
+    city: {
+        $nin: ["Chennai", "Bengaluru"]
+    }
+})
+
+//OUTPUT:
+[
+    { empId: 4, name: "Deepa", dept: "Finance",
+      salary: 50000, city: "Mumbai" },
+
+    { empId: 6, name: "Farah", dept: "HR",
+      salary: 45000, city: "Delhi" },
+
+    { empId: 8, name: "Hema", dept: "Sales",
+      salary: 38000, city: "Hyderabad" }
+]
+
+//7.
+db.employees.find({
+    name: { $regex: "^[ABC]" }
+})
+
+//OUTPUT:
+[
+    { empId: 1, name: "Anita", dept: "HR",
+      salary: 42000, city: "Chennai" },
+
+    { empId: 2, name: "Bala", dept: "IT",
+      salary: 65000, city: "Bengaluru" },
+
+    { empId: 3, name: "Charan", dept: "IT",
+      salary: 58000, city: "Chennai" }
+]
+//8.
+db.employees.find(
+    {},
+    { _id: 0, name: 1, salary: 1 }
+).sort({ salary: -1 }).skip(2).limit(3)
+
+//OUTPUT:
+[
+    {
+        name: "Gopal",
+        salary: 61000
+    },
+    {
+        name: "Charan",
+        salary: 58000
+    },
+    {
+        name: "Deepa",
+        salary: 50000
+    }
+]
